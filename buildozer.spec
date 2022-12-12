@@ -1,10 +1,10 @@
 [app]
 
 # (str) Title of your application
-title = MainApp2
+title = MainApp5
 
 # (str) Package name
-package.name = MainApp2
+package.name = MainApp5
 
 # (str) Package domain (needed for android/ios packaging)
 package.domain = com.github.hbldh
@@ -38,7 +38,7 @@ version = 0.1.0
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = python3,kivy,bleak,async_to_sync, async_timeout
+requirements = python3,kivy,bleak,async_to_sync, async_timeout, schedule, nest_asyncio, asynckivy, asyncgui
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
