@@ -1,8 +1,9 @@
 import asyncio
 import bleak
 from kivy.app import App
-from kivy.base import async_runTouchApp
-
+from typing import Optional
+from asyncio import AbstractEventLoop
+from asyncio import Task
 from kivy.uix.label import Label
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.boxlayout import BoxLayout
@@ -16,8 +17,6 @@ from kivy.clock import Clock
 from functools import partial
 
 
-# import asynckivy as ak
-
 def obr(read_ch):
     if len(read_ch) > 2:
         read_ch = int(read_ch[1:], 16)
@@ -30,26 +29,25 @@ def test(mac: str, sm) -> None:
     def inner(btn) -> None:
         print('Called!', mac)
         sm.current = mac
-
     return inner
 
 
 class MainApp(App):
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.__worker = EventLoopWorker()
+    def __init__(self, loop:AbstractEventLoop) -> None:
+        super().__init__()
+        self._loop: AbstractEventLoop = loop
+        self._task: Optional[Task] = None
 
     def build(self):
-        global lyt, sm, CMAC, bts
+        global lyt, bts
         sm = ScreenManager()
         screen1 = Screen(name='main')
         lyt = GridLayout(cols=1, spacing=10, size_hint_y=None)
         lyt.bind(minimum_height=lyt.setter('height'))
         bts = Button(text='SCAN', size_hint_y=None, height=150, size_hint_x=1,
                      color=(0, 2, 0, 1), background_color=(0, 0, 205, 1))
-        bts.on_press = lambda: asyncio.run(self.ch_name())
-        bts.on_release = lambda: asyncio.run(self.scan())
+        bts_b = lambda bts, sm=sm: self.scan(bts, sm)
+        bts.bind(on_release = bts_b)
         root = ScrollView(size_hint=(1, None), size=(Window.width, Window.height), bar_width=8,
                           bar_color=[100, 0, 0, 0.9], bar_inactive_color=[0, 100, 0, 0.9])
         root.add_widget(lyt)
@@ -59,10 +57,11 @@ class MainApp(App):
         print(sm.screen_names)
         return sm
 
-    async def ch_name(self):
+    def scan(self, bts: Button, sm) -> None:
         bts.text = 'SCANNING ...'
+        self._task = self._loop.create_task(self.task_scan(sm))
 
-    async def scan(self):
+    async def task_scan(self, sm):
         scanned_devices = await BleakScanner.discover()
         print('Scanned devices: ', scanned_devices)
         if len(scanned_devices) == 0:
@@ -73,32 +72,37 @@ class MainApp(App):
                 name = str(device.name)
                 MAC = str(device.address)
                 Btb = Button(text='Back', size_hint_y=None, height=200, size_hint_x=1)
-                Btb.on_release = self.back
+                Btb_b = lambda sm=sm: self.back(sm)
+                Btb.on_release = Btb_b
                 lb1 = Label(text=('[size=60]' + '[b]' + name + '[/size]' + '\n' + 'MAC:  ' + '[/b]' + MAC),
                             markup=True)
                 Bt1 = Button(text='Connect', size_hint_y=None, height=300, size_hint_x=1)
-                loop = asyncio.get_running_loop()
-                print("Loop created", loop)
-                Bt1.on_release = lambda: asyncio.run(self.char())
+                knop = lambda sm=sm: self.char(sm)
+                Bt1.bind(on_press=knop)
                 screen2 = Screen(name=MAC)
                 Bxl = BoxLayout(orientation='vertical')
+                dev = Button(text=('[size=60]' + '[b]' + name + '[/size]' + '\n' + 'MAC:  ' + '[/b]' + MAC),
+                             markup=True, size_hint_y=None, height=300, size_hint_x=1,
+                             on_press=test(MAC, sm))
                 Bxl.add_widget(Btb)
                 Bxl.add_widget(lb1)
                 Bxl.add_widget(Bt1)
                 screen2.add_widget(Bxl)
                 sm.add_widget(screen2)
-                dev = Button(text=('[size=60]' + '[b]' + name + '[/size]' + '\n' + 'MAC:  ' + '[/b]' + MAC),
-                             markup=True, size_hint_y=None, height=300, size_hint_x=1,
-                             on_press=test(MAC, sm))
                 lyt.add_widget(dev)
         bts.text = 'SCAN'
         return lyt, sm
 
-    def back(self):
+    def back(self, sm):
         sm.current = 'main'
         return sm
 
-    async def char(self):
+    def char(self, sm):
+        self._task = self._loop.create_task(self.task_char(sm))
+        self._task = self._loop.create_task(self.task_volt(sm))
+
+
+    async def task_char(self, sm):
         global event1, lb_battery_voltage
         MAC = sm.current
         screen3 = Screen(name=MAC + '1')
@@ -129,65 +133,28 @@ class MainApp(App):
         Bxl.add_widget(lb_battery_voltage)
         screen3.add_widget(Bxl)
         sm.add_widget(screen3)
-        # event1 = Clock.schedule_interval(partial(self.charvnotas, MAC), 10)
         sm.current = MAC + '1'
 
-        # ak.start_soon(self.test_me())
-        print('Before task creation')
-        loop = asyncio.get_running_loop()
-        t = loop.create_task(self.test_me())
-        print('After task creation')
-
-        while True:
-            await asyncio.sleep(5)
-            print("Loop sleep")
-
-        # return sm
-
-    # def charvnotas(self, MAC, *args):
-    #     if sm.current == MAC + '1':
-    #         asyncio.run(self.charv())
-    #     else:
-    #         event1.cancel()
-    #
-    # async def charv(self, *args):
-    #     try:
-    #         MAC = sm.current[:-1]
-    #         async with BleakClient(MAC) as client:
-    #             volt = (str(obr(await client.read_gatt_char("964bfa71-51ae-49ff-98a8-b2f17c129716"))))
-    #             print(volt)
-    #             volt = (int(volt) - 3000) / 1200 * 100 // 1
-    #         lb_battery_voltage.text = str(volt) + '%'
-    #         device = await BleakScanner.find_device_by_address(MAC)
-    #         print(device.rssi)
-    #     except bleak.exc.BleakError as e:
-    #         print('error')
-
-    async def test_me(self):
+    async def task_volt(self, sm):
         print('I am started')
         await asyncio.sleep(5)
         print('finish')
+        mac = sm.current[:-1]
         while True:
             try:
-                MAC = "00:07:80:1F:44:DF"
-                async with BleakClient(MAC) as client:
+                async with BleakClient(mac) as client:
                     print(str(obr(await client.read_gatt_char("964bfa71-51ae-49ff-98a8-b2f17c129716"))))
                     await asyncio.sleep(5)
             except bleak.exc.BleakError as e:
                 print('error')
 
-            # if not self._continue:
-            #     return
+
+def main():
+    loop: AbstractEventLoop = asyncio.get_event_loop()
+    loop.run_until_complete(MainApp(loop).async_run(async_lib='asyncio'))
+    loop.close()
 
 
 if __name__ == '__main__':
-    # loop = asyncio.get_event_loop()
-    #
-    # app = MainApp()
-    #
-    # loop.create_task(app.async_run('asyncio'))
-    # loop.run_forever()
-    # loop.close()
+    main()
 
-    app = MainApp()
-    app.run()
