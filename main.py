@@ -13,8 +13,6 @@ from kivy.core.window import Window
 from kivy.uix.button import Button
 from bleak import BleakScanner
 from bleak import BleakClient
-from kivy.clock import Clock
-from functools import partial
 
 
 def obr(read_ch):
@@ -39,15 +37,13 @@ class MainApp(App):
         self._task: Optional[Task] = None
 
     def build(self):
-        global lyt, bts
         sm = ScreenManager()
         screen1 = Screen(name='main')
         lyt = GridLayout(cols=1, spacing=10, size_hint_y=None)
         lyt.bind(minimum_height=lyt.setter('height'))
         bts = Button(text='SCAN', size_hint_y=None, height=150, size_hint_x=1,
                      color=(0, 2, 0, 1), background_color=(0, 0, 205, 1))
-        bts_b = lambda bts, sm=sm: self.scan(bts, sm)
-        bts.bind(on_release = bts_b)
+        bts.bind(on_release = lambda bts, lyt=lyt, sm=sm: self.scan(bts, lyt, sm))
         root = ScrollView(size_hint=(1, None), size=(Window.width, Window.height), bar_width=8,
                           bar_color=[100, 0, 0, 0.9], bar_inactive_color=[0, 100, 0, 0.9])
         root.add_widget(lyt)
@@ -57,11 +53,11 @@ class MainApp(App):
         print(sm.screen_names)
         return sm
 
-    def scan(self, bts: Button, sm) -> None:
+    def scan(self, bts: Button, lyt, sm) -> None:
         bts.text = 'SCANNING ...'
-        self._task = self._loop.create_task(self.task_scan(sm))
+        self._task = self._loop.create_task(self.task_scan(bts, lyt, sm))
 
-    async def task_scan(self, sm):
+    async def task_scan(self, bts: Button, lyt, sm):
         scanned_devices = await BleakScanner.discover()
         print('Scanned devices: ', scanned_devices)
         if len(scanned_devices) == 0:
@@ -72,13 +68,11 @@ class MainApp(App):
                 name = str(device.name)
                 MAC = str(device.address)
                 Btb = Button(text='Back', size_hint_y=None, height=200, size_hint_x=1)
-                Btb_b = lambda sm=sm: self.back(sm)
-                Btb.on_release = Btb_b
+                Btb.on_release = lambda sm=sm: self.back(sm)
                 lb1 = Label(text=('[size=60]' + '[b]' + name + '[/size]' + '\n' + 'MAC:  ' + '[/b]' + MAC),
                             markup=True)
                 Bt1 = Button(text='Connect', size_hint_y=None, height=300, size_hint_x=1)
-                knop = lambda sm=sm: self.char(sm)
-                Bt1.bind(on_press=knop)
+                Bt1.bind(on_press=lambda bts, sm=sm: self.char(bts, sm))
                 screen2 = Screen(name=MAC)
                 Bxl = BoxLayout(orientation='vertical')
                 dev = Button(text=('[size=60]' + '[b]' + name + '[/size]' + '\n' + 'MAC:  ' + '[/b]' + MAC),
@@ -97,26 +91,22 @@ class MainApp(App):
         sm.current = 'main'
         return sm
 
-    def char(self, sm):
-        self._task = self._loop.create_task(self.task_char(sm))
-        self._task = self._loop.create_task(self.task_volt(sm))
+    def char(self, bts: Button, sm):
+        def inner(btn) -> None:
+            print(sm)
+        self._task = self._loop.create_task(self.task_char(bts, sm))
+        return inner
 
 
-    async def task_char(self, sm):
-        global event1, lb_battery_voltage
+    async def task_char(self, bts: Button, sm):
         MAC = sm.current
         screen3 = Screen(name=MAC + '1')
         Btb = Button(text='Back', size_hint_y=None, height=200, size_hint_x=1)
-        Btb.on_release = self.back
+        Btb.on_release = lambda sm=sm: self.back(sm)
         Bxl = BoxLayout(orientation='vertical')
         Bxl.add_widget(Btb)
         try:
             async with BleakClient(MAC) as client:
-                for service in client.services:
-                    print(f"  service {service.uuid}")
-                    for characteristic in service.characteristics:
-                        print(f"  characteristic {characteristic.uuid} {hex(characteristic.handle)}"
-                              f" ({len(characteristic.descriptors)} descriptors)")
                 print(
                     f'xgatt_battery_voltage:{obr(await client.read_gatt_char("964bfa71-51ae-49ff-98a8-b2f17c129716"))}')
                 print(
@@ -134,8 +124,9 @@ class MainApp(App):
         screen3.add_widget(Bxl)
         sm.add_widget(screen3)
         sm.current = MAC + '1'
+        self._task = self._loop.create_task(self.task_volt(lb_battery_voltage, sm))
 
-    async def task_volt(self, sm):
+    async def task_volt(self, lb_battery_voltage, sm):
         print('I am started')
         await asyncio.sleep(5)
         print('finish')
@@ -143,7 +134,9 @@ class MainApp(App):
         while True:
             try:
                 async with BleakClient(mac) as client:
-                    print(str(obr(await client.read_gatt_char("964bfa71-51ae-49ff-98a8-b2f17c129716"))))
+                    battery_voltage = (str(obr(await client.read_gatt_char("964bfa71-51ae-49ff-98a8-b2f17c129716"))))
+                    print(battery_voltage)
+                    lb_battery_voltage.text = battery_voltage
                     await asyncio.sleep(5)
             except bleak.exc.BleakError as e:
                 print('error')
@@ -157,4 +150,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
