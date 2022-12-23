@@ -97,7 +97,6 @@ class MainApp(App):
         self._task = self._loop.create_task(self.task_char(bts, sm))
         return inner
 
-
     async def task_char(self, bts: Button, sm):
         MAC = sm.current
         screen3 = Screen(name=MAC + '1')
@@ -133,6 +132,8 @@ class MainApp(App):
         mac = sm.current[:-1]
         while True:
             try:
+                if sm.current[:-1] != mac:
+                    self._task.cancel()
                 async with BleakClient(mac) as client:
                     battery_voltage = (str(obr(await client.read_gatt_char("964bfa71-51ae-49ff-98a8-b2f17c129716"))))
                     print(battery_voltage)
