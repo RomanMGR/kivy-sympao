@@ -1,0 +1,27 @@
+#: import DeviceScreenModel Model.DeviceScreenModel
+
+<DeviceScreenView>
+    GridLayout:
+        id: devices_list
+        cols: 1
+        spacing: 10
+        minimum_height: self.height
+        Button:
+            text: 'Back'
+            size_hint_y:None
+            height: 200
+            size_hint_x: 1
+            on_press: root.back()
+        Button:
+            id: lb_volt
+            size_hint_y:None
+            size_hint_x: 1
+            height: 200
+            text: 'waiting'
+
+    Button:
+        text: 'Connect'
+        size_hint_y:None
+        height: 200
+        size_hint_x: 1
+        on_press: root.model.check_volt()
