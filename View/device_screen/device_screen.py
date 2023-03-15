@@ -1,6 +1,7 @@
 from kivy.uix.screenmanager import Screen
 from Utility.observer import Observer
 from kivy.properties import ObjectProperty, ListProperty, ColorProperty
+from Model.DeviceScreenModel import DeviceScreenModel
 
 
 class DeviceScreenView(Screen, Observer):
@@ -15,7 +16,7 @@ class DeviceScreenView(Screen, Observer):
 
     def back(self):
         self.manager_screens.current = 'start_screen'
-        self.model._task.cancel()
+        self.model.discon()
 
     def model_is_changed(self):
-        self.ids.lb_volt.text = self.model.lb_battery_voltage
+        self.ids.lb_volt.text = DeviceScreenModel.lb_battery_voltage

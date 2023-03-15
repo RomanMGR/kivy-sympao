@@ -30,7 +30,7 @@ class StartScreenView(Screen, Observer):
             self.ids.devices_list.add_widget(Button(
                 text=('[size=60]' + '[b]' + name + '[/size]' + '\n' + 'MAC:  ' + '[/b]' + MAC),
                 markup=True, size_hint_y=None, height=300, size_hint_x=1,
-                on_press = lambda name=name, MAC=MAC: self.controller.change_screen(name, MAC)))
+                on_press = lambda bts, device = device: self.controller.change_screen(bts, device)))
         self.ids.devices_list.bind(minimum_height=self.ids.devices_list.setter('height'))
         self.ids.bts.text = "scan"
 

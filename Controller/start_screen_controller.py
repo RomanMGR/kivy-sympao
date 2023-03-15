@@ -1,12 +1,6 @@
-import asyncio
-from kivy.uix.button import Button
-from typing import Optional
-from asyncio import AbstractEventLoop
-from asyncio import Task
 from View.start_screen.start_screen import StartScreenView
-from Model.start_screen_model import StartScreenModel
 from Model.DeviceScreenModel import DeviceScreenModel
-from kivy.properties import ObjectProperty, ListProperty, ColorProperty, StringProperty
+
 
 class StartScreenController:
     """
@@ -17,16 +11,17 @@ class StartScreenController:
     """
 
     def __init__(self, model) -> None:
-        self.model = model  # Model.login_screen.LoginScreenModel
+        self.model = model
         self.view = StartScreenView(controller=self, model=self.model)
 
     def scan(self)->None:
         self.model.scanm()
         self.view.ids.bts.text = 'SCANNING ...'
 
-    def change_screen(self, name, mac):
-        DeviceScreenModel.MAC = mac
+    def change_screen(self, bts, device):
+        DeviceScreenModel.device = device
         self.view.manager_screens.current = 'device_screen'
+        DeviceScreenModel().check_volt()
 
     def get_view(self) -> StartScreenView:
         return self.view

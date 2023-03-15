@@ -1,8 +1,10 @@
 import asyncio
+import bleak
 from bleak import BleakScanner
-from View.start_screen.start_screen import StartScreenView
 from asyncio import Task
 from typing import Optional
+from asyncio import AbstractEventLoop
+
 
 class StartScreenModel:
 
@@ -10,7 +12,6 @@ class StartScreenModel:
         self._task: Optional[Task] = None
         self._observers = []
         self.scanned_devices = []
-
 
     def scanm(self) -> None:
         self._task = asyncio.create_task(self.task_scan())
@@ -29,4 +30,3 @@ class StartScreenModel:
 
     def remove_observer(self, observer):
         self._observers.remove(observer)
-

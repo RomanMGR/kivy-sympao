@@ -38,7 +38,7 @@ version = 0.1.0
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = python3,kivy,bleak,async_to_sync, async_timeout, schedule, nest_asyncio, kivymd
+requirements = python3,kivy,bleak,async_to_sync, async_timeout, schedule, nest_asyncio, kivymd, overrides
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
