@@ -1,25 +1,29 @@
 #: import Window kivy.core.window.Window
 
 <StartScreenView>
-    ScrollView:
-        do_scroll_x: False
-        do_scroll_y: True
-        size: (Window.width, Window.height)
-        bar_width: 8
-        bar_color: root.bar_color1
-        bar_inactive_color: root.bar_inactive_color1
-        GridLayout:
-            id: devices_list
-            cols: 1
-            spacing: 10
-            size_hint_y: None
-            minimum_height: self.height
-    Button:
-        id: bts
-        text: "scan"
-        on_press: root.controller.scan()
-        size_hint_y:None
-        height:150
-        size_hint_x:1
-        color:(0, 2, 0, 1)
-        background_color:(0, 0, 205, 1)
+    MDBoxLayout:
+        orientation: 'vertical'
+        MDTopAppBar:
+            title: "Поиск устройств"
+            left_action_items: [["menu"]]
+        ScrollView:
+            do_scroll_x: False
+            do_scroll_y: True
+            size: (Window.width, Window.height)
+            bar_width: 8
+            bar_color: root.bar_color1
+            bar_inactive_color: root.bar_inactive_color1
+            MDGridLayout:
+                id: devices_list
+                adaptive_height: True
+                cols: 1
+                spacing: 8
+        MDRaisedButton:
+            id: bts
+            text: "Обновить список устройств"
+            font_size: "18 sp"
+            text_color: "black"
+            on_press: root.controller.scan()
+            size_hint_y:None
+            size_hint_x:1
+

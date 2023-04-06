@@ -1,5 +1,7 @@
 from View.start_screen.start_screen import StartScreenView
+from kivy.lang import Builder
 from Model.DeviceScreenModel import DeviceScreenModel
+from View.device_screen.device_screen import DeviceScreenView
 
 
 class StartScreenController:
@@ -16,12 +18,14 @@ class StartScreenController:
 
     def scan(self)->None:
         self.model.scanm()
-        self.view.ids.bts.text = 'SCANNING ...'
+        self.view.show_alert_dialog()
 
-    def change_screen(self, bts, device):
-        DeviceScreenModel.device = device
-        self.view.manager_screens.current = 'device_screen'
-        DeviceScreenModel().check_volt()
+    def on_device_connect_taped(self, device, mac, name):
+        # DeviceScreenModel.device = device
+        # DeviceScreenView.name_c(name)
+        # self.view.manager_screens.current = 'device_screen'
+        # DeviceScreenView.model2.check_volt()
+        self.model.on_device_connect_taped(device, mac, name)
 
     def get_view(self) -> StartScreenView:
         return self.view

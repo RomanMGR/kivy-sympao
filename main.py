@@ -5,6 +5,7 @@ from kivymd.app import MDApp
 from asyncio import AbstractEventLoop
 from asyncio import Task
 from typing import Optional
+from services.screen_transition import ScreenTransitionService
 
 
 
@@ -17,6 +18,9 @@ class LoginAppMVC(MDApp):
         self.manager_screens = ScreenManager()
 
     def build(self) -> ScreenManager:
+        self.theme_cls.theme_style = "Light"
+        self.theme_cls.primary_palette = "Blue"
+        self.theme_cls.primary_hue = "700"
         self.generate_application_screens()
         return self.manager_screens
 
@@ -28,15 +32,16 @@ class LoginAppMVC(MDApp):
         see how new screens are added according to the given application
         architecture.
         """
-
+        s = ScreenTransitionService(self.manager_screens)
         for i, name_screen in enumerate(screens.keys()):
-            model = screens[name_screen]["model"]()
+            model = screens[name_screen]["model"](s, self._loop)
             controller = screens[name_screen]["controller"](model)
             view = controller.get_view()
             view.manager_screens = self.manager_screens
             view.name = name_screen
             print(name_screen)
             self.manager_screens.add_widget(view)
+            s.add_model(name_screen, model)
 
 def main():
     loop: AbstractEventLoop = asyncio.get_event_loop()

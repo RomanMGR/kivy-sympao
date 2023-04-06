@@ -1,25 +1,30 @@
 import asyncio
-import bleak
-from bleak import BleakScanner
+from services.scan_service import ScanService
 from asyncio import Task
 from typing import Optional
 from asyncio import AbstractEventLoop
+from services.screen_transition import ScreenTransitionService
 
 
 class StartScreenModel:
 
-    def __init__(self, **kwargs) -> None:
+    def __init__(self, screen_transition_service, loop, **kwargs) -> None:
         self._task: Optional[Task] = None
+        self._loop: AbstractEventLoop = loop
         self._observers = []
         self.scanned_devices = []
+        self.screen_transition_service = screen_transition_service
 
     def scanm(self) -> None:
-        self._task = asyncio.create_task(self.task_scan())
+        self._task = self._loop.create_task(self.task_scan())
 
     async def task_scan(self):
-        self.scanned_devices = await BleakScanner.discover()
-        print('Scanned devices: ', self.scanned_devices)
+        await ScanService().scan()
+        self.scanned_devices = ScanService.scanned_devices
         self.notify_observers()
+
+    def on_device_connect_taped(self, device, mac, name):
+        self.screen_transition_service.connect_to_device(device, mac, name)
 
     def notify_observers(self):
         for observer in self._observers:

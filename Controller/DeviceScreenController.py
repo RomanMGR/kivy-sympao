@@ -1,10 +1,4 @@
-import asyncio
-from kivy.uix.button import Button
-from typing import Optional
-from asyncio import AbstractEventLoop
-from asyncio import Task
 from View.device_screen.device_screen import DeviceScreenView
-from Model.DeviceScreenModel import DeviceScreenModel
 
 
 class DeviceScreenController:

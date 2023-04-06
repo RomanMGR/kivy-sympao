@@ -1,35 +1,45 @@
 import asyncio
 import bleak
 from asyncio import Task
-from typing import Optional
-from bleak import BleakClient
 from asyncio import AbstractEventLoop
-
+from typing import Optional
 from services.get_volt_service import GetVoltService
+from bleak import BleakClient
 
 
 class DeviceScreenModel:
 
-    device = ''
     lb_battery_voltage = 0
-    services = ''
+    rssi = 0
+    examp_class_serv = ''
 
-    def __init__(self, loop:AbstractEventLoop, **kwargs) -> None:
-        self._loop: AbstractEventLoop = loop
+    def __init__(self, screen_transition_service, loop, **kwargs) -> None:
         self._task: Optional[Task] = None
+        self._loop: AbstractEventLoop = loop
         self._observers = []
+        self.screen_transition_service = screen_transition_service
+        self.__mac = None
+        self.__device = None
+        self.__name = None
+
+    def start(self, device, mac, name):
+        self.__mac = mac
+        self.__device = device
+        self.__name = name
+        self.check_volt()
+
+    def get_name(self):
+        return self.__name
 
     def check_volt(self):
-        print('111111111')
-        self._task = asyncio.create_task(self.task_volt())
+        self._task = self._loop.create_task(self.task_volt())
 
     async def task_volt(self):
-        print('MAC = ', self.device)
-        self.services = GetVoltService(self.device)
-        await self.services.client_con()
+        self.examp_class_serv = GetVoltService(self.__device)
+        await self.examp_class_serv.client_con()
         while True:
             try:
-                await self.services.get_volt()
+                await self.examp_class_serv.get_volt()
                 DeviceScreenModel.lb_battery_voltage = GetVoltService.battery_voltage
                 print(DeviceScreenModel.lb_battery_voltage)
                 self.notify_observers()
@@ -38,14 +48,11 @@ class DeviceScreenModel:
                 print('error')
 
     def discon(self):
-        asyncio.Task.cancel(self._task)
-        self._task = asyncio.create_task(self.task_discon())
-        print('def discon called')
+        self._task.cancel()
+        self._task = self._loop.create_task(self.task_discon())
 
     async def task_discon(self):
-        print('do task dicon')
-        await self.services.discon()
-        print('def TASK discon called')
+        await self.examp_class_serv.discon1()
 
     def notify_observers(self):
         for observer in self._observers:
