@@ -42,6 +42,7 @@ class LoginAppMVC(MDApp):
             print(name_screen)
             self.manager_screens.add_widget(view)
             s.add_model(name_screen, model)
+            s.add_view(name_screen, view)
 
 def main():
     loop: AbstractEventLoop = asyncio.get_event_loop()

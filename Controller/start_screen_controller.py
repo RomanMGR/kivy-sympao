@@ -17,8 +17,8 @@ class StartScreenController:
         self.view = StartScreenView(controller=self, model=self.model)
 
     def scan(self)->None:
-        self.model.scanm()
         self.view.show_alert_dialog()
+        self.model.scanm()
 
     def on_device_connect_taped(self, device, mac, name):
         # DeviceScreenModel.device = device

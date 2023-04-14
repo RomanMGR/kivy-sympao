@@ -26,6 +26,7 @@ class DeviceScreenModel:
         self.__mac = mac
         self.__device = device
         self.__name = name
+        self.screen_transition_service.show_dialog_device()
         self.check_volt()
 
     def get_name(self):
@@ -40,8 +41,8 @@ class DeviceScreenModel:
         while True:
             try:
                 await self.examp_class_serv.get_volt()
-                DeviceScreenModel.lb_battery_voltage = GetVoltService.battery_voltage
-                print(DeviceScreenModel.lb_battery_voltage)
+                voltage_obr = int(round((int(GetVoltService.battery_voltage) - 3000)/1200 * 100, 0))
+                DeviceScreenModel.lb_battery_voltage = voltage_obr
                 self.notify_observers()
                 await asyncio.sleep(5)
             except bleak.exc.BleakError as e:
