@@ -1,9 +1,10 @@
 from kivy.uix.screenmanager import Screen
 from Utility.observer import Observer
-from kivy.properties import ObjectProperty, ListProperty, ColorProperty
+from kivy.properties import ObjectProperty
 from Model.DeviceScreenModel import DeviceScreenModel
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.boxlayout import BoxLayout
+from kivymd.color_definitions import colors
 
 
 class Content(BoxLayout):
@@ -36,10 +37,6 @@ class DeviceScreenView(Screen, Observer):
             self.dialog = MDDialog(title="Подключение к устройству", type="custom",content_cls=Content())
         self.dialog.open()
 
-    def slider_amp(self):
-        # self.ids.text_field_id.text = str(self.ids.slider_amp_id.value)
-        print(self.ids.text_field_id.text)
-
     def on_text_reaction(self):
         if 0 < float(self.ids.text_field_id.text) <= 25:
             self.ids.slider_amp_id.value = self.ids.text_field_id.text
@@ -71,7 +68,6 @@ class DeviceScreenView(Screen, Observer):
             self.ids.text_field_chast_id.text = str(150)
 
     def refresh_voltage(self):
-        print(DeviceScreenModel.lb_battery_voltage)
         self.ids.voltage_id.text = str(DeviceScreenModel.lb_battery_voltage) + '%'
         if DeviceScreenModel.lb_battery_voltage < 10:
             self.ids.voltage_icon_id.icon = 'battery-alert-bluetooth'
@@ -96,8 +92,52 @@ class DeviceScreenView(Screen, Observer):
         else:
             self.ids.voltage_icon_id.icon = 'battery-bluetooth'
 
+    def refresh_parameters(self):
+        self.ids.slider_amp_id.value = str(self.model.parameters[0])
+        self.ids.slider_dlit_id.value = str(self.model.parameters[1])
+        self.ids.slider_chast_id.value = str(self.model.parameters[2])
+        if int(self.model.parameters[3]) == 0:
+            self.ids.a0.active = True
+        elif int(self.model.parameters[3]) == 1:
+            self.ids.a1.active = True
+        elif int(self.model.parameters[3]) == 2:
+            self.ids.a2.active = True
+        elif int(self.model.parameters[3]) == 3:
+            self.ids.a3.active = True
+        elif int(self.model.parameters[3]) == 4:
+            self.ids.a4.active = True
+        elif int(self.model.parameters[3]) == 5:
+            self.ids.a5.active = True
+        elif int(self.model.parameters[3]) == 6:
+            self.ids.a6.active = True
+        elif int(self.model.parameters[3]) == 7:
+            self.ids.a7.active = True
+        elif int(self.model.parameters[3]) == 8:
+            self.ids.a8.active = True
+        elif int(self.model.parameters[3]) == 9:
+            self.ids.a9.active = True
+        elif int(self.model.parameters[3]) == 10:
+            self.ids.a10.active = True
+        elif int(self.model.parameters[3]) == 11:
+            self.ids.a11.active = True
+        elif int(self.model.parameters[3]) == 12:
+            self.ids.a12.active = True
+        if int(self.model.parameters[4]) == 0:
+            self.ids.btn_off.md_bg_color = colors['Red']['700']
+            self.ids.btn_l.md_bg_color = colors['Blue']['700']
+            self.ids.btn_r.md_bg_color = colors['Blue']['700']
+        elif int(self.model.parameters[4]) == 1:
+            self.ids.btn_l.md_bg_color = colors['Red']['700']
+            self.ids.btn_off.md_bg_color = colors['Blue']['700']
+            self.ids.btn_r.md_bg_color = colors['Blue']['700']
+        elif int(self.model.parameters[4]) == 2:
+            self.ids.btn_r.md_bg_color = colors['Red']['700']
+            self.ids.btn_off.md_bg_color = colors['Blue']['700']
+            self.ids.btn_l.md_bg_color = colors['Blue']['700']
+
     def model_is_changed(self):
         name = self.model.get_name()
         self.refresh_voltage()
+        self.refresh_parameters()
         self.dialog.dismiss()
         self.ids.named.text = ' '+name

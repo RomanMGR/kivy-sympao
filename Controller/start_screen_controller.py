@@ -1,8 +1,5 @@
 from View.start_screen.start_screen import StartScreenView
-from kivy.lang import Builder
-from Model.DeviceScreenModel import DeviceScreenModel
-from View.device_screen.device_screen import DeviceScreenView
-
+from kivymd.uix.navigationdrawer import MDNavigationLayout
 
 class StartScreenController:
     """
@@ -21,11 +18,17 @@ class StartScreenController:
         self.model.scanm()
 
     def on_device_connect_taped(self, device, mac, name):
-        # DeviceScreenModel.device = device
-        # DeviceScreenView.name_c(name)
-        # self.view.manager_screens.current = 'device_screen'
-        # DeviceScreenView.model2.check_volt()
         self.model.on_device_connect_taped(device, mac, name)
+
+    def drawer1_taped(self):
+        self.view.manager_screens.current = "start_screen"
+        self.view.ids.nav_drawer.set_state("close")
+        print('drawer1 taped!')
+
+    def drawer2_taped(self):
+        self.view.manager_screens.current = "nback_screen"
+        self.view.ids.nav_drawer.set_state("close")
+        print('drawer2 taped!')
 
     def get_view(self) -> StartScreenView:
         return self.view

@@ -8,7 +8,6 @@ from typing import Optional
 from services.screen_transition import ScreenTransitionService
 
 
-
 class LoginAppMVC(MDApp):
     def __init__(self, loop:AbstractEventLoop) -> None:
         super().__init__()

@@ -1,29 +1,52 @@
 #: import Window kivy.core.window.Window
 
+<Drawer@MDNavigationDrawerItem>
+    focus_color: "#e7e4c0"
+    text_color: "#4a4939"
+    ripple_color: "#c5bdd2"
+    selected_color: "#0c6c4d"
 <StartScreenView>
-    MDBoxLayout:
-        orientation: 'vertical'
-        MDTopAppBar:
-            title: "Поиск устройств"
-            left_action_items: [["menu"]]
-        ScrollView:
-            do_scroll_x: False
-            do_scroll_y: True
-            size: (Window.width, Window.height)
-            bar_width: 8
-            bar_color: root.bar_color1
-            bar_inactive_color: root.bar_inactive_color1
-            MDGridLayout:
-                id: devices_list
-                adaptive_height: True
-                cols: 1
-                spacing: 8
-        MDRaisedButton:
-            id: bts
-            text: "Обновить список устройств"
-            font_size: "18 sp"
-            text_color: "black"
-            on_press: root.controller.scan()
-            size_hint_y:None
-            size_hint_x:1
+    MDNavigationLayout:
+        MDScreenManager:
+            MDScreen:
+                MDBoxLayout:
+                    orientation: 'vertical'
+                    MDTopAppBar:
+                        title: "Поиск устройств"
+                        left_action_items: [["menu", lambda x: root.ids.nav_drawer.set_state("open")]]
+                    ScrollView:
+                        do_scroll_x: False
+                        do_scroll_y: True
+                        size: (Window.width, Window.height)
+                        bar_width: 8
+                        bar_color: root.bar_color1
+                        bar_inactive_color: root.bar_inactive_color1
+                        MDGridLayout:
+                            id: devices_list
+                            adaptive_height: True
+                            cols: 1
+                            spacing: 8
+                    MDRaisedButton:
+                        id: bts
+                        text: "Обновить список устройств"
+                        font_size: "18 sp"
+                        text_color: "black"
+                        on_press: root.controller.scan()
+                        size_hint_y:None
+                        size_hint_x:1
+        MDNavigationDrawer:
+            id: nav_drawer
+            radius: (0, 16, 16, 0)
+            MDNavigationDrawerMenu:
+                MDNavigationDrawerHeader:
+                    title: "Menu"
+                    title_color: "#4a4939"
+                    spacing: "4dp"
+                    padding: "12dp", 0, 0, "56dp"
+                Drawer:
+                    text: "Поиск устройств"
+                    on_press: root.controller.drawer1_taped()
+                Drawer:
+                    text: "N-back"
+                    on_press: root.controller.drawer2_taped()
 

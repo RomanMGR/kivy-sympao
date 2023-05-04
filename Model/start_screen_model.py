@@ -26,6 +26,9 @@ class StartScreenModel:
     def on_device_connect_taped(self, device, mac, name):
         self.screen_transition_service.connect_to_device(device, mac, name)
 
+    def show_menu(self, name):
+        self.screen_transition_service.show_menu(name)
+
     def notify_observers(self):
         for observer in self._observers:
             observer.model_is_changed()

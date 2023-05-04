@@ -1,3 +1,5 @@
+
+
 class ScreenTransitionService():
     def __init__(self, manager_screens):
         self.__models = {}
@@ -16,4 +18,9 @@ class ScreenTransitionService():
 
     def show_dialog_device(self):
         self.__view['device_screen'].show_alert_dialog()
+
+    def show_menu(self):
+        self.__view['start_screen'].ids.nav_drawer.set_state("open")
+
+
 
