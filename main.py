@@ -8,7 +8,6 @@ from typing import Optional
 from services.screen_transition import ScreenTransitionService
 
 
-
 class LoginAppMVC(MDApp):
     def __init__(self, loop:AbstractEventLoop) -> None:
         super().__init__()
@@ -42,6 +41,7 @@ class LoginAppMVC(MDApp):
             print(name_screen)
             self.manager_screens.add_widget(view)
             s.add_model(name_screen, model)
+            s.add_view(name_screen, view)
 
 def main():
     loop: AbstractEventLoop = asyncio.get_event_loop()

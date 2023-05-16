@@ -10,7 +10,7 @@ from kivymd.uix.dialog import MDDialog
 from kivymd.uix.boxlayout import BoxLayout
 
 
-class Content(BoxLayout):
+class Content_device(BoxLayout):
     pass
 
 
@@ -29,7 +29,7 @@ class StartScreenView(Screen, Observer):
 
     def show_alert_dialog(self):
         if not self.dialog:
-            self.dialog = MDDialog(title="Поиск устройств", type="custom",content_cls=Content())
+            self.dialog = MDDialog(title="Поиск устройств", type="custom",content_cls=Content_device())
         self.dialog.open()
 
     def model_is_changed(self):
