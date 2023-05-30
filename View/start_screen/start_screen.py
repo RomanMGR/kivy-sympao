@@ -1,7 +1,3 @@
-import os
-
-from kivy.uix.scrollview import ScrollView
-from kivy.core.window import Window
 from kivy.properties import ObjectProperty, ListProperty, ColorProperty
 from kivy.uix.screenmanager import Screen
 from Utility.observer import Observer

@@ -4,9 +4,11 @@
 from Model.start_screen_model import StartScreenModel
 from Model.DeviceScreenModel import DeviceScreenModel
 from Model.NbackScreenModel import NbackScreenModel
+from Model.ResultsScreenModel import ResultsScreenModel
 from Controller.start_screen_controller import StartScreenController
 from Controller.DeviceScreenController import DeviceScreenController
 from Controller.NbackScreenController import NbackScreenController
+from Controller.ResultsScreenController import ResultsScreenController
 
 print('screens')
 screens = {
@@ -21,5 +23,9 @@ screens = {
     "nback_screen": {
         "model": NbackScreenModel,
         "controller": NbackScreenController,
+    },
+    "results_screen": {
+        "model": ResultsScreenModel,
+        "controller": ResultsScreenController
     }
 }

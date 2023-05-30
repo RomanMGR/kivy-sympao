@@ -28,7 +28,14 @@ class StartScreenController:
     def drawer2_taped(self):
         self.view.manager_screens.current = "nback_screen"
         self.view.ids.nav_drawer.set_state("close")
+        self.model.start_n()
         print('drawer2 taped!')
+
+    def drawer3_taped(self):
+        self.view.manager_screens.current = "results_screen"
+        self.view.ids.nav_drawer.set_state("close")
+        self.model.start_results()
+        print('drawer3 taped!')
 
     def get_view(self) -> StartScreenView:
         return self.view

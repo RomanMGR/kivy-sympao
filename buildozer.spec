@@ -14,7 +14,7 @@ source.dir = .
 #source.dir = recipes/gattlib-py/src/
 
 # (list) Source files to include (let empty to include all the files)
-source.include_exts = py,png,jpg,kv,atlas
+source.include_exts = py,png,jpg,kv,atlas,wav
 
 # (list) List of inclusions using pattern matching
 #source.include_patterns = assets/*,images/*.png
@@ -38,11 +38,11 @@ version = 0.1.0
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = python3,kivy,bleak,async_to_sync, async_timeout, schedule, nest_asyncio, kivymd, overrides
+requirements = python3,kivy,bleak,async_to_sync, async_timeout, schedule, nest_asyncio, kivymd, overrides, numpy
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
-# requirements.source.kivy = ../../kivy
+#requirements.source.kivy = ../music/
 
 # (str) Presplash of the application
 #presplash.filename = %(source.dir)s/data/presplash.png

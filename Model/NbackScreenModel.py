@@ -1,8 +1,10 @@
 import asyncio
 import bleak
+import numpy as np
 from asyncio import Task
 from asyncio import AbstractEventLoop
 from typing import Optional
+from kivy.core.audio import SoundLoader
 
 
 class NbackScreenModel:
@@ -12,13 +14,129 @@ class NbackScreenModel:
         self._loop: AbstractEventLoop = loop
         self._observers = []
         self.screen_transition_service = screen_transition_service
+        self.n = 1
+        self.n_pos_last = '-'
+        self.n_pos_cur = ''
+        self.n_sound_last = '-'
+        self.n_sound_c = ''
+        self.Flag = False
+        self.Flag_s = False
+        self.button = [0, 0]
+        self.result = 0
+        self.result_pos = 0
+        self.result_s = 0
+
+    def show_menu(self):
+        self.screen_transition_service.show_menu()
+
+    def test(self):
+        self._task = asyncio.create_task(self.task_test())
+
+    async def task_test(self):
+        self.result = 0
+        self.result_pos = 0
+        self.result_s = 0
+        letters_n = np.random.randint(1, 9, 20)
+        letters = []
+        list_n = np.random.randint(1, 10, 20)
+        list_pos = []
+        correct_list = np.random.randint(0, 3, 20)
+        correct_list2 = np.random.randint(0, 3, 20)
+        print(letters_n)
+        print(list_n)
+        print(correct_list)
+        for i in range(len(correct_list)):
+            if i >= self.n:
+                if correct_list[i] == 0:
+                    letters.append(letters_n[i-self.n])
+                else:
+                    letters.append((letters_n[i]))
+                if correct_list2[i] == 0:
+                    list_pos.append(list_n[i - self.n])
+                else:
+                    list_pos.append((list_n[i]))
+            else:
+                letters.append((letters_n[i]))
+                list_pos.append((list_n[i]))
+        print(letters)
+        print(list_pos)
+        for i in range(len(list_n)):
+            self.Flag = False
+            self.Flag_s = False
+            self.screen_transition_service.nback1(list_pos, i)
+            if i-self.n >= 0:
+                self.n_pos_last = list_pos[i-self.n]
+                self.n_sound_last = letters[i-self.n]
+            self.n_pos_cur = list_pos[i]
+            self.n_sound_c = letters[i]
+            self.play_letter(letters[i])
+            await asyncio.sleep(1)
+            self.screen_transition_service.nback2()
+            await asyncio.sleep(1)
+            try:
+                self.button[0].disabled = False
+            except:
+                pass
+            try:
+                self.button[1].disabled = False
+            except:
+                pass
+            # self.check_pass()
+            self.total_res()
+        print(self.result)
+        self.screen_transition_service.result()
+
+    def total_res(self):
+        if self.n_pos_cur == self.n_pos_last:
+            self.result += 1
+            self.result_pos += 1
+        if self.n_sound_c == self.n_sound_last:
+            self.result += 1
+            self.result_s += 1
+        self.screen_transition_service.add_step()
+
+    def pos_match(self, btn):
+        if self.n_pos_cur == self.n_pos_last:
+            count = 1
+        else:
+            count = -1
+        self.Flag = True
+        self.button[0] = btn
+        self.screen_transition_service.pos_match(count)
+
+    def sound_match(self, btn):
+        if self.n_sound_c == self.n_sound_last:
+            count = 1
+        else:
+            count = -1
+        self.Flag_s = True
+        self.button[1] = btn
+        self.screen_transition_service.sound_match(count)
+
+    def play_letter(self, letter):
+        if letter == 1:
+            SoundLoader.load('music/c.wav').play()
+        if letter == 2:
+            SoundLoader.load('music/h.wav').play()
+        if letter == 3:
+            SoundLoader.load('music/k.wav').play()
+        if letter == 4:
+            SoundLoader.load('music/l.wav').play()
+        if letter == 5:
+            SoundLoader.load('music/q.wav').play()
+        if letter == 6:
+            SoundLoader.load('music/r.wav').play()
+        if letter == 7:
+            SoundLoader.load('music/s.wav').play()
+        if letter == 8:
+            SoundLoader.load('music/t.wav').play()
+
+    def cancel(self):
+        self._task.cancel()
 
     def notify_observers(self):
         for observer in self._observers:
             observer.model_is_changed()
-
-    def show_menu(self):
-        self.screen_transition_service.show_menu()
 
     def add_observer(self, observer):
         self._observers.append(observer)

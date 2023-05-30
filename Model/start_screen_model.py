@@ -29,6 +29,12 @@ class StartScreenModel:
     def show_menu(self, name):
         self.screen_transition_service.show_menu(name)
 
+    def start_n(self):
+        self.screen_transition_service.start_n()
+
+    def start_results(self):
+        self.screen_transition_service.start_results()
+
     def notify_observers(self):
         for observer in self._observers:
             observer.model_is_changed()

@@ -1,0 +1,22 @@
+#: import Window kivy.core.window.Window
+
+
+<ResultsScreenView>
+    MDBoxLayout:
+        orientation: 'vertical'
+        MDTopAppBar:
+            size_hint_y: 0.1
+            title: "Результаты"
+            left_action_items: [["arrow-left", lambda x: root.back()]]
+        ScrollView:
+            do_scroll_x: False
+            do_scroll_y: True
+            size: (Window.width, Window.height)
+            bar_width: 8
+            bar_color: root.bar_color1
+            bar_inactive_color: root.bar_inactive_color1
+            MDGridLayout:
+                id: result_list
+                adaptive_height: True
+                cols: 1
+                spacing: 8
