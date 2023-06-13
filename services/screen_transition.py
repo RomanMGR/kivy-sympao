@@ -81,10 +81,15 @@ class ScreenTransitionService():
         else:
             self.__view["nback_screen"].result = 0
         self.__view["results_screen"].savedata.save_data(self.__view["nback_screen"].result)
+        text_result = str("Суммарный: " + str(self.__view["nback_screen"].total) + '/' + str(self.__models["nback_screen"].result) +
+                      '\n' + 'Позициональный: ' + str(self.__view["nback_screen"].total_pos) + '/' + str(
+                      self.__models["nback_screen"].result_pos) + '\n' + 'Звуковой: ' + str(self.__view["nback_screen"].total_s) +
+                      '/' + str(self.__models["nback_screen"].result_s))
         self.__view["nback_screen"].show_result_dialog()
         self.__view["nback_screen"].total = str(0)
         self.__view["nback_screen"].total_pos = str(0)
         self.__view["nback_screen"].total_s = str(0)
         self.__view["nback_screen"].result = 0
+        return text_result
 
 

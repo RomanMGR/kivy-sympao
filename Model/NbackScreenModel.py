@@ -1,10 +1,10 @@
 import asyncio
-import bleak
 import numpy as np
 from asyncio import Task
 from asyncio import AbstractEventLoop
 from typing import Optional
 from kivy.core.audio import SoundLoader
+from services.export_data import ExportData
 
 
 class NbackScreenModel:
@@ -14,6 +14,7 @@ class NbackScreenModel:
         self._loop: AbstractEventLoop = loop
         self._observers = []
         self.screen_transition_service = screen_transition_service
+        self.export_data = ExportData()
         self.n = 1
         self.n_pos_last = '-'
         self.n_pos_cur = ''
@@ -64,6 +65,7 @@ class NbackScreenModel:
             self.Flag = False
             self.Flag_s = False
             self.screen_transition_service.nback1(list_pos, i)
+            self.export_data.time(i)
             if i-self.n >= 0:
                 self.n_pos_last = list_pos[i-self.n]
                 self.n_sound_last = letters[i-self.n]
@@ -83,8 +85,10 @@ class NbackScreenModel:
                 pass
             # self.check_pass()
             self.total_res()
+            self.calculate_miss()
         print(self.result)
-        self.screen_transition_service.result()
+        result = self.screen_transition_service.result()
+        self.export_data.diff_time(result)
 
     def total_res(self):
         if self.n_pos_cur == self.n_pos_last:
@@ -95,11 +99,25 @@ class NbackScreenModel:
             self.result_s += 1
         self.screen_transition_service.add_step()
 
+    def calculate_miss(self):
+        if not self.Flag:
+            if self.n_pos_cur == self.n_pos_last:
+                self.export_data.react_time_pos('pos_miss_error')
+            else:
+                self.export_data.react_time_pos('pos_miss_corr')
+        if not self.Flag_s:
+            if self.n_sound_c == self.n_sound_last:
+                self.export_data.react_time_sound('sound_miss_error')
+            else:
+                self.export_data.react_time_sound('sound_miss_corr')
+
     def pos_match(self, btn):
         if self.n_pos_cur == self.n_pos_last:
             count = 1
+            self.export_data.react_time_pos('pos-right')
         else:
             count = -1
+            self.export_data.react_time_pos('pos-wrong')
         self.Flag = True
         self.button[0] = btn
         self.screen_transition_service.pos_match(count)
@@ -107,8 +125,10 @@ class NbackScreenModel:
     def sound_match(self, btn):
         if self.n_sound_c == self.n_sound_last:
             count = 1
+            self.export_data.react_time_sound('sound-right')
         else:
             count = -1
+            self.export_data.react_time_sound('sound-right')
         self.Flag_s = True
         self.button[1] = btn
         self.screen_transition_service.sound_match(count)
