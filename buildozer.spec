@@ -1,10 +1,10 @@
 [app]
 
 # (str) Title of your application
-title = MainApp6
+title = MainApp7
 
 # (str) Package name
-package.name = MainApp6
+package.name = MainApp7
 
 # (str) Package domain (needed for android/ios packaging)
 package.domain = com.github.hbldh
@@ -38,7 +38,7 @@ version = 0.1.0
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = python3,kivy,bleak,async_to_sync, async_timeout, schedule, nest_asyncio, kivymd, overrides, numpy
+requirements = python3,kivy,bleak,async_to_sync, async_timeout, schedule, nest_asyncio, kivymd, overrides, numpy,pyjnius
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
@@ -90,7 +90,7 @@ fullscreen = 0
 #android.presplash_lottie = "path/to/lottie/file.json"
 
 # (list) Permissions
-android.permissions = BLUETOOTH,BLUETOOTH_ADMIN,ACCESS_FINE_LOCATION,ACCESS_COARSE_LOCATION,ACCESS_BACKGROUND_LOCATION, INTERNET
+android.permissions = BLUETOOTH,BLUETOOTH_ADMIN,ACCESS_FINE_LOCATION,ACCESS_COARSE_LOCATION,ACCESS_BACKGROUND_LOCATION, INTERNET, READ_PHONE_STATE, WRITE_EXTERNAL_STORAGE, READ_PRIVILEGED_PHONE_STATE
 
 # (list) features (adds uses-feature -tags to manifest)
 #android.features = android.hardware.usb.host

@@ -6,6 +6,9 @@ from kivy.storage.jsonstore import JsonStore
 from email.mime.multipart import MIMEMultipart
 from email.mime.application import MIMEApplication
 from email.mime.text import MIMEText
+from jnius import autoclass
+from android import activity
+
 
 
 class ExportData:
@@ -39,27 +42,29 @@ class ExportData:
         self.comment_list_sound.append(result)
         print(result, curr)
 
-    def diff_time(self, result):
+    def diff_time(self, result, export_n, uuid):
         for i in range(len(self.time_list)):
             self.diff_time_list_pos.append(self.react_time_list_pos[i] - self.time_list[i])
             self.diff_time_list_sound.append(self.react_time_list_sound[i] - self.time_list[i])
-        print(self.diff_time_list_pos)
-        print(self.diff_time_list_sound)
-        text = result
+        model = self.get_model()
+        text = result + '\n' +'Step back=' + str(export_n) + ' model=' + model + ' uuid=' + str(uuid)
         for i in range(len(self.diff_time_list_pos)):
-            # self.store.put(key=i, diff_time=str(self.diff_time_list_pos[i]), comment=str(self.comment_list_pos[i]))
             self.dict_pos = {'step': 'Pos '+str(i),
                              'diff_time': str(self.diff_time_list_pos[i]),
                              'comment': str(self.comment_list_pos[i])}
             self.export_list.append(self.dict_pos)
         for i in range(len(self.diff_time_list_sound)):
-            # self.store.put(key=i, diff_time=str(self.diff_time_list_sound[i]), comment=str(self.comment_list_sound[i]))
             self.dict_sound = {'step': 'Sound '+str(i),
                              'diff_time': str(self.diff_time_list_sound[i]),
                              'comment': str(self.comment_list_sound[i])}
             self.export_list.append(self.dict_sound)
         self.send_email(subject=str(self.time_list[0]), to_addr='roman_nasyrov00@mail.ru', body_text=text)
         print('end !!!')
+
+    def get_model(self):
+        build = autoclass('android.os.Build')
+        model_device = str(build.DEVICE)
+        return model_device
 
     def send_email(self, subject, to_addr, body_text):
         msg = MIMEMultipart()
@@ -69,8 +74,6 @@ class ExportData:
         msgText = MIMEText('<b>%s</b>' % (body_text), 'html')
         msg.attach(msgText)
         cols = ['step', 'diff_time', 'comment']
-        print(self.dict_pos)
-        print(self.dict_sound)
         with open('file.csv', 'w', newline='', encoding='UTF-8') as file:
             writer = csv.DictWriter(file, fieldnames=cols, delimiter=',')
             writer.writerows(self.export_list)
@@ -81,6 +84,16 @@ class ExportData:
         server.login('fo180006@mail.ru', 'qbWx16dcMSuySCJwtZtu')
         server.sendmail('fo180006@mail.ru', to_addr, msg.as_string())
         server.quit()
+        self.time_list = []
+        self.react_time_list_pos = []
+        self.react_time_list_sound = []
+        self.comment_list_pos = []
+        self.comment_list_sound = []
+        self.diff_time_list_pos = []
+        self.diff_time_list_sound = []
+        self.dict_pos = {}
+        self.dict_sound = {}
+        self.export_list = []
 
 
 

@@ -33,10 +33,17 @@ class NbackScreenModel:
     def test(self):
         self._task = asyncio.create_task(self.task_test())
 
+    def restart(self):
+        self.screen_transition_service.restart()
+
     async def task_test(self):
         self.result = 0
         self.result_pos = 0
         self.result_s = 0
+        self.n_pos_last = '-'
+        self.n_pos_cur = ''
+        self.n_sound_last = '-'
+        self.n_sound_c = ''
         letters_n = np.random.randint(1, 9, 20)
         letters = []
         list_n = np.random.randint(1, 10, 20)
@@ -83,12 +90,13 @@ class NbackScreenModel:
                 self.button[1].disabled = False
             except:
                 pass
-            # self.check_pass()
             self.total_res()
             self.calculate_miss()
         print(self.result)
+        export_n = self.n
         result = self.screen_transition_service.result()
-        self.export_data.diff_time(result)
+        uuid = self.screen_transition_service.get_uuid()
+        self.export_data.diff_time(result, export_n, uuid)
 
     def total_res(self):
         if self.n_pos_cur == self.n_pos_last:

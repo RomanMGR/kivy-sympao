@@ -50,10 +50,11 @@
                 id: text_field_id
                 text: str(round(root.ids.slider_amp_id.value, 1))[:4]
                 on_text_validate: root.on_text_reaction()
-                hint_text: str(round(root.ids.slider_amp_id.value, 1))[:4]
                 pos_hint:{'center_x': 0.98, 'center_y': 0.1}
                 size_hint_x: None
-                width: '50dp'
+                width: '60dp'
+                text_color_normal: 'red'
+                font_size: '20sp'
         MDRelativeLayout:
             size_hint: None, None
             size: 1000, 200
@@ -77,10 +78,11 @@
                 id: text_field_dlit_id
                 text: str(round(root.ids.slider_dlit_id.value, 1))[:4]
                 on_text_validate: root.on_text_reaction_dlit()
-                hint_text: str(round(root.ids.slider_dlit_id.value, 1))[:4]
                 pos_hint:{'center_x': 0.98, 'center_y': 0.1}
                 size_hint_x: None
-                width: '50dp'
+                width: '60dp'
+                text_color_normal: 'red'
+                font_size: '20sp'
         MDRelativeLayout:
             size_hint: None, None
             size: 1000, 200
@@ -104,10 +106,11 @@
                 id: text_field_chast_id
                 text: str(round(root.ids.slider_chast_id.value, 1))[:4]
                 on_text_validate: root.on_text_reaction_chast()
-                hint_text: str(round(root.ids.slider_chast_id.value, 1))[:4]
                 pos_hint:{'center_x': 0.98, 'center_y': 0.1}
                 size_hint_x: None
-                width: '50dp'
+                width: '60dp'
+                text_color_normal: 'red'
+                font_size: '20sp'
         MDRelativeLayout:
             size_hint: None, None
             size: 1100, 500
@@ -203,6 +206,10 @@
                 size: dp(48), dp(48)
                 pos_hint: {'center_x': .65, 'center_y': .2}
                 on_active: root.controller.send_anode(12)
+        MDRelativeLayout:
+            size_hint: None, None
+            size: 550, 150
+            pos: 200, 200
         MDBoxLayout:
             orientation: 'horizontal'
             adaptive_height: True

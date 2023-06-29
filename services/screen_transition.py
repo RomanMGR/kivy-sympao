@@ -21,6 +21,12 @@ class ScreenTransitionService():
         self.__view["nback_screen"].ids.menu_btn.disabled = False
         self.__view["nback_screen"].show_alert_dialog()
 
+    def restart(self):
+        self.nback2()
+        self.__view["nback_screen"].step = 0
+        self.__view["nback_screen"].ids.step.text = '0/20'
+        self.__view["nback_screen"].ids.menu_btn.disabled = False
+
     def start_results(self):
         self.__view["results_screen"].start()
 
@@ -74,13 +80,16 @@ class ScreenTransitionService():
         self.__view["nback_screen"].step = int(self.__view["nback_screen"].step) + 1
         self.__view["nback_screen"].ids.step.text = str(self.__view["nback_screen"].step) + '/20'
 
+    def get_uuid(self):
+        return self.__view["results_screen"].savedata.get_uuid()
+
     def result(self):
         result = round(int(self.__view["nback_screen"].total)/self.__models["nback_screen"].result * 100, 2)
         if result >= 0:
             self.__view["nback_screen"].result = result
         else:
             self.__view["nback_screen"].result = 0
-        self.__view["results_screen"].savedata.save_data(self.__view["nback_screen"].result)
+        self.__view["results_screen"].savedata.save_data(self.__view["nback_screen"].result, self.__models["nback_screen"].n)
         text_result = str("Суммарный: " + str(self.__view["nback_screen"].total) + '/' + str(self.__models["nback_screen"].result) +
                       '\n' + 'Позициональный: ' + str(self.__view["nback_screen"].total_pos) + '/' + str(
                       self.__models["nback_screen"].result_pos) + '\n' + 'Звуковой: ' + str(self.__view["nback_screen"].total_s) +

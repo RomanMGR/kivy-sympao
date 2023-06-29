@@ -46,16 +46,18 @@ class DeviceScreenView(Screen, Observer):
         else:
             self.ids.slider_amp_id.value = 25
             self.ids.text_field_id.text = str(25)
+        self.controller.send_amp()
 
     def on_text_reaction_dlit(self):
         if 15 < float(self.ids.text_field_dlit_id.text) <= 60:
-            self.ids.slider_dlit_id.value = self.ids.text_field_id.text
+            self.ids.slider_dlit_id.value = self.ids.text_field_dlit_id.text
         elif float(self.ids.text_field_dlit_id.text) <= 15:
             self.ids.slider_dlit_id.value = 15
             self.ids.text_field_dlit_id.text = str(15)
         else:
             self.ids.slider_dlit_id.value = 60
             self.ids.text_field_dlit_id.text = str(60)
+        self.controller.send_dlit()
 
     def on_text_reaction_chast(self):
         if 5 < float(self.ids.text_field_chast_id.text) <= 150:
@@ -66,6 +68,7 @@ class DeviceScreenView(Screen, Observer):
         else:
             self.ids.slider_chast_id.value = 150
             self.ids.text_field_chast_id.text = str(150)
+        self.controller.send_chast()
 
     def refresh_voltage(self):
         self.ids.voltage_id.text = str(DeviceScreenModel.lb_battery_voltage) + '%'

@@ -17,9 +17,16 @@ class NbackScreenController:
             pass
         self.view.ids.progress.value = 0
         self.view.ids.n_start.clear_widgets()
-        self.view.ids.n_start.add_widget(MDRectangleFlatButton(text="Start", size_hint=(0.3, 0.5),
+        self.view.ids.n_start.add_widget(MDRectangleFlatButton(text="Начать", size_hint=(0.3, 0.5),
                                                                on_press=lambda btn: self.test(), id='n_start_btn'))
         self.view.back()
+
+    def restart(self):
+        self.view.ids.progress.value = 0
+        self.view.ids.n_start.clear_widgets()
+        self.view.ids.n_start.add_widget(MDRectangleFlatButton(text="Начать", size_hint=(0.3, 0.5),
+                                                               on_press=lambda btn: self.test(), id='n_start_btn'))
+        self.model.restart()
 
     def pos_match(self, btn):
         self.model.pos_match(btn)
@@ -39,9 +46,9 @@ class NbackScreenController:
         self.view.ids.menu_btn.disabled = True
         self.model.test()
         self.view.ids.n_start.clear_widgets()
-        self.view.ids.n_start.add_widget(MDRectangleFlatButton(text="Position match", size_hint=(0.3, 0.5), id='nbtn1',
+        self.view.ids.n_start.add_widget(MDRectangleFlatButton(text="Совпадение \n позиций", size_hint=(0.3, 0.5), id='nbtn1',
                                                                on_press=lambda btn: self.pos_match(btn)))
-        self.view.ids.n_start.add_widget(MDRectangleFlatButton(text="Sound match", size_hint=(0.3, 0.5), id='nbtn2',
+        self.view.ids.n_start.add_widget(MDRectangleFlatButton(text="Звуковое \n совпадение", size_hint=(0.3, 0.5), id='nbtn2',
                                                                on_press=lambda btn: self.sound_match(btn)))
 
     def get_view(self) -> NbackScreenView:

@@ -24,7 +24,7 @@ class NbackScreenView(Screen, Observer):
     total = '0'
     total_pos = 0
     total_s = 0
-    step = '0'
+    step = '1'
     result = 0
 
     def __init__(self, **kwargs):
@@ -64,6 +64,7 @@ class NbackScreenView(Screen, Observer):
         self.dialog.dismiss()
 
     def close_res(self):
+        self.controller.restart()
         self.dialog_res.dismiss()
         self.dialog_res = None
 
