@@ -1,0 +1,20 @@
+<ScaleBeckScreenView>
+    MDBoxLayout:
+        id:scale_box
+        orientation: 'vertical'
+        MDTopAppBar:
+            id: top_app
+            size_hint_y: 0.1
+            title: "Шкала депрессии Бека"
+            left_action_items: [["arrow-left", lambda x: root.back()]]
+        MDLabel:
+            id: scale_inst_lb
+            text: root.get_instruction()
+            font_style: "H6"
+            halign: 'center'
+        MDRectangleFlatButton:
+            id: scale_start_btn
+            text: "Начать тестирование"
+            size_hint_y: 0.15
+            size_hint_x: 1
+            on_press: root.controller.start()
