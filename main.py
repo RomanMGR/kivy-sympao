@@ -1,8 +1,9 @@
-import asyncio
 from kivy.uix.screenmanager import ScreenManager
+from kivy.core.window import Window
 from View.screens import screens
 from kivymd.app import MDApp
 from asyncio import AbstractEventLoop
+from asyncio import get_event_loop
 from asyncio import Task
 from typing import Optional
 from services.screen_transition import ScreenTransitionService
@@ -15,6 +16,7 @@ class LoginAppMVC(MDApp):
         self._task: Optional[Task] = None
         self.load_all_kv_files(self.directory)
         self.manager_screens = ScreenManager()
+        Window.bind(on_keyboard=self.android_back_click)
 
     def build(self) -> ScreenManager:
         self.theme_cls.theme_style = "Light"
@@ -22,6 +24,11 @@ class LoginAppMVC(MDApp):
         self.theme_cls.primary_hue = "700"
         self.generate_application_screens()
         return self.manager_screens
+
+    def android_back_click(self, window, key, *largs):
+        if key == 27:
+            self.manager_screens.current = 'start_screen'
+            return True
 
     def generate_application_screens(self):
         """
@@ -43,10 +50,12 @@ class LoginAppMVC(MDApp):
             s.add_model(name_screen, model)
             s.add_view(name_screen, view)
 
+
 def main():
-    loop: AbstractEventLoop = asyncio.get_event_loop()
+    loop: AbstractEventLoop = get_event_loop()
     loop.run_until_complete(LoginAppMVC(loop).async_run(async_lib='asyncio'))
     loop.close()
+
 
 if __name__ == '__main__':
     main()

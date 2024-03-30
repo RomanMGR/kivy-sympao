@@ -14,8 +14,9 @@ class DeviceScreenController:
         self.model = model
         self.view = DeviceScreenView(controller=self, model=self.model)
 
-    def send_anode(self, n):
-        self.model.send_anode(n)
+    def send_anode(self, n, checkbox, value):
+        if value:
+            self.model.send_anode(n)
 
     def send_amp(self):
         self.model.send_amp(self.view.ids.slider_amp_id.value)
@@ -29,6 +30,10 @@ class DeviceScreenController:
     def send_segment(self, n) -> None:
         print('n', str(n))
         self.model.send_segment(n)
+        self.view.slider_amp_text = 0
+        self.view.ids.slider_amp_id.value = 0
+        self.model.parameters[0] = 0
+        self.view.ids.text_field_id.text = str(0)
 
     def get_view(self) -> DeviceScreenView:
         return self.view

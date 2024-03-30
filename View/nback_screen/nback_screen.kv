@@ -1,4 +1,82 @@
+<Btn@MDRectangleFlatButton>
+    disabled: True
+    line_color: "red"
+    md_bg_color: "blue"
+    md_bg_color_disabled: colors['Gray']['500']
+    size: (360, 360)
+
 <NbackScreenView>
-    MDTopAppBar:
-        title: "N-back"
-        left_action_items: [["arrow-left", lambda x: root.back()]]
+    MDBoxLayout:
+        id: n_back_top_main
+        orientation: 'vertical'
+        MDTopAppBar:
+            size_hint_y: 0.4
+            title: "Н-назад"
+            left_action_items: [["arrow-left", lambda x: root.controller.back()]]
+        MDBoxLayout:
+            size_hint_y: 0.05
+            MDProgressBar:
+                id: progress
+                color: colors['Red']['700']
+                value: 0
+        MDGridLayout:
+            rows: 3
+            cols: 3
+            adaptive_size: True
+            Btn:
+                id: bt_1
+            Btn:
+                id: bt_2
+            Btn:
+                id: bt_3
+            Btn:
+                id: bt_4
+            Btn:
+                id: bt_5
+            Btn:
+                id: bt_6
+            Btn:
+                id: bt_7
+            Btn:
+                id: bt_8
+            Btn:
+                id: bt_9
+        MDBoxLayout:
+            orientation: 'horizontal'
+            spacing: 10
+            MDLabel:
+                text: "Шаг:"
+                halign: "center"
+                font_style: "H5"
+                size_hint_x: 0.25
+            MDRaisedButton:
+                id: menu2_btn
+                halign: "left"
+                text: '0/20'
+                pos_hint: {"center_x": .35, "center_y": .5}
+                font_style: "H5"
+                size_hint_x: 0.25
+                on_release: root.menu_2.open()
+            MDRaisedButton:
+                id: menu_btn
+                text: 'n = 1'
+                pos_hint: {"center_x": .5, "center_y": .5}
+                size_hint_x: 1
+                font_style: "H5"
+                on_release: root.menu.open()
+                size_hint_x: 0.25
+            MDLabel:
+                size_hint_x: 0.05
+        MDBoxLayout:
+            id: n_start
+            orientation: 'horizontal'
+            MDRectangleFlatButton:
+                id: n_start_btn
+                text: "Начать"
+                size_hint_x: 0.3
+                size_hint_y: 0.75
+                on_press: root.controller.test()
+
+
+
+

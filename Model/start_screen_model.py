@@ -1,9 +1,7 @@
-import asyncio
 from services.scan_service import ScanService
 from asyncio import Task
 from typing import Optional
 from asyncio import AbstractEventLoop
-from services.screen_transition import ScreenTransitionService
 
 
 class StartScreenModel:
@@ -28,6 +26,15 @@ class StartScreenModel:
 
     def show_menu(self, name):
         self.screen_transition_service.show_menu(name)
+
+    def start_n(self):
+        self.screen_transition_service.start_n()
+
+    def start_corsi(self):
+        self.screen_transition_service.start_corsi()
+
+    def start_results(self):
+        self.screen_transition_service.start_results()
 
     def notify_observers(self):
         for observer in self._observers:

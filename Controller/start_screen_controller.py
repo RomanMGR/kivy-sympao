@@ -1,5 +1,5 @@
 from View.start_screen.start_screen import StartScreenView
-from kivymd.uix.navigationdrawer import MDNavigationLayout
+
 
 class StartScreenController:
     """
@@ -28,7 +28,40 @@ class StartScreenController:
     def drawer2_taped(self):
         self.view.manager_screens.current = "nback_screen"
         self.view.ids.nav_drawer.set_state("close")
+        self.model.start_n()
         print('drawer2 taped!')
+
+    def drawer3_taped(self):
+        self.view.manager_screens.current = "results_screen"
+        self.view.ids.nav_drawer.set_state("close")
+        self.model.start_results()
+        print('drawer3 taped!')
+
+    def drawer4_taped(self):
+        self.view.manager_screens.current = "scale_beck_screen"
+        self.view.ids.nav_drawer.set_state("close")
+        print('drawer4 taped!')
+
+    def drawer5_taped(self):
+        self.view.manager_screens.current = "anxiety_screen"
+        self.view.ids.nav_drawer.set_state("close")
+        print('drawer5 taped!')
+
+    def drawer6_taped(self):
+        self.view.manager_screens.current = "asthenia_screen"
+        self.view.ids.nav_drawer.set_state("close")
+        print('drawer6 taped!')
+
+    def drawer7_taped(self):
+        self.view.manager_screens.current = "corsi_screen"
+        self.view.ids.nav_drawer.set_state("close")
+        self.model.start_corsi()
+        print('drawer7 taped!')
+
+    def drawer8_taped(self):
+        self.view.manager_screens.current = "scab_screen"
+        self.view.ids.nav_drawer.set_state("close")
+        print('drawer8 taped!')
 
     def get_view(self) -> StartScreenView:
         return self.view

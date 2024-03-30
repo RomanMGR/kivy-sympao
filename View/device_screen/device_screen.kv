@@ -16,9 +16,11 @@
                 theme_text_color: 'Primary'
                 font_style: 'H6'
                 text: root.name
+                size_hint_x: 0.7
             MDGridLayout:
                 adaptive_height: True
                 cols: 2
+                size_hint_x: 0.3
                 MDLabel:
                     id: voltage_id
                     text: root.voltage
@@ -44,16 +46,17 @@
                 pos_hint:{'center_x': 0.45, 'center_y': 0.1}
                 track_color_active: "red"
                 size_hint_x: None
-                width: '350dp'
+                width: dp(300)
                 on_active: root.controller.send_amp()
             MDTextField:
                 id: text_field_id
                 text: str(round(root.ids.slider_amp_id.value, 1))[:4]
                 on_text_validate: root.on_text_reaction()
-                hint_text: str(round(root.ids.slider_amp_id.value, 1))[:4]
                 pos_hint:{'center_x': 0.98, 'center_y': 0.1}
                 size_hint_x: None
-                width: '50dp'
+                width: '60dp'
+                text_color_normal: 'red'
+                font_size: '20sp'
         MDRelativeLayout:
             size_hint: None, None
             size: 1000, 200
@@ -71,16 +74,17 @@
                 pos_hint:{'center_x': 0.45, 'center_y': 0.1}
                 track_color_active: "red"
                 size_hint_x: None
-                width: '350dp'
+                width: dp(300)
                 on_active: root.controller.send_dlit()
             MDTextField:
                 id: text_field_dlit_id
                 text: str(round(root.ids.slider_dlit_id.value, 1))[:4]
                 on_text_validate: root.on_text_reaction_dlit()
-                hint_text: str(round(root.ids.slider_dlit_id.value, 1))[:4]
                 pos_hint:{'center_x': 0.98, 'center_y': 0.1}
                 size_hint_x: None
-                width: '50dp'
+                width: '60dp'
+                text_color_normal: 'red'
+                font_size: '20sp'
         MDRelativeLayout:
             size_hint: None, None
             size: 1000, 200
@@ -98,16 +102,17 @@
                 pos_hint:{'center_x': 0.45, 'center_y': 0.1}
                 track_color_active: "red"
                 size_hint_x: None
-                width: '350dp'
+                width: dp(300)
                 on_active: root.controller.send_chast()
             MDTextField:
                 id: text_field_chast_id
                 text: str(round(root.ids.slider_chast_id.value, 1))[:4]
                 on_text_validate: root.on_text_reaction_chast()
-                hint_text: str(round(root.ids.slider_chast_id.value, 1))[:4]
                 pos_hint:{'center_x': 0.98, 'center_y': 0.1}
                 size_hint_x: None
-                width: '50dp'
+                width: '60dp'
+                text_color_normal: 'red'
+                font_size: '20sp'
         MDRelativeLayout:
             size_hint: None, None
             size: 1100, 500
@@ -117,92 +122,96 @@
                 group: 'group'
                 size_hint: None, None
                 size: dp(48), dp(48)
-                pos_hint: {'center_x': .35, 'center_y': .6}
-                on_active: root.controller.send_anode(0)
+                pos_hint: {'center_x': .26, 'center_y': .65}
+                on_active: root.controller.send_anode(0, *args)
             MDCheckbox:
                 id: a1
                 group: 'group'
                 size_hint: None, None
                 size: dp(48), dp(48)
-                pos_hint: {'center_x': .45, 'center_y': .6}
-                on_active: root.controller.send_anode(1)
+                pos_hint: {'center_x': .4, 'center_y': .65}
+                on_active: root.controller.send_anode(1, *args)
             MDCheckbox:
                 id: a2
                 group: 'group'
                 size_hint: None, None
                 size: dp(48), dp(48)
-                pos_hint: {'center_x': .55, 'center_y': .6}
-                on_active: root.controller.send_anode(2)
+                pos_hint: {'center_x': .54, 'center_y': .65}
+                on_active: root.controller.send_anode(2, *args)
             MDCheckbox:
                 id: a3
                 group: 'group'
                 size_hint: None, None
                 size: dp(48), dp(48)
-                pos_hint: {'center_x': .65, 'center_y': .6}
-                on_active: root.controller.send_anode(3)
+                pos_hint: {'center_x': .68, 'center_y': .65}
+                on_active: root.controller.send_anode(3, *args)
             MDCheckbox:
                 id: a4
                 group: 'group'
                 size_hint: None, None
                 size: dp(48), dp(48)
-                pos_hint: {'center_x': .3, 'center_y': .4}
-                on_active: root.controller.send_anode(4)
+                pos_hint: {'center_x': .2, 'center_y': .4}
+                on_active: root.controller.send_anode(4, *args)
             MDCheckbox:
                 id: a5
                 group: 'group'
                 size_hint: None, None
                 size: dp(48), dp(48)
-                pos_hint: {'center_x': .4, 'center_y': .4}
-                on_active: root.controller.send_anode(5)
+                pos_hint: {'center_x': .34, 'center_y': .4}
+                on_active: root.controller.send_anode(5, *args)
             MDCheckbox:
                 id: a6
                 group: 'group'
                 size_hint: None, None
                 size: dp(48), dp(48)
-                pos_hint: {'center_x': .5, 'center_y': .4}
-                on_active: root.controller.send_anode(6)
+                pos_hint: {'center_x': .48, 'center_y': .4}
+                on_active: root.controller.send_anode(6, *args)
             MDCheckbox:
                 id: a7
                 group: 'group'
                 size_hint: None, None
                 size: dp(48), dp(48)
-                pos_hint: {'center_x': .6, 'center_y': .4}
-                on_active: root.controller.send_anode(7)
+                pos_hint: {'center_x': .62, 'center_y': .4}
+                on_active: root.controller.send_anode(7, *args)
             MDCheckbox:
                 id: a8
                 group: 'group'
                 size_hint: None, None
                 size: dp(48), dp(48)
-                pos_hint: {'center_x': .7, 'center_y': .4}
-                on_active: root.controller.send_anode(8)
+                pos_hint: {'center_x': .76, 'center_y': .4}
+                on_active: root.controller.send_anode(8, *args)
             MDCheckbox:
                 id: a9
                 group: 'group'
                 size_hint: None, None
                 size: dp(48), dp(48)
-                pos_hint: {'center_x': .35, 'center_y': .2}
-                on_active: root.controller.send_anode(9)
+                pos_hint: {'center_x': .26, 'center_y': .15}
+                on_active: root.controller.send_anode(9, *args)
             MDCheckbox:
                 id: a10
                 group: 'group'
                 size_hint: None, None
                 size: dp(48), dp(48)
-                pos_hint: {'center_x': .45, 'center_y': .2}
-                on_active: root.controller.send_anode(10)
+                pos_hint: {'center_x': .4, 'center_y': .15}
+                on_active: root.controller.send_anode(10, *args)
             MDCheckbox:
                 id: a11
                 group: 'group'
                 size_hint: None, None
                 size: dp(48), dp(48)
-                pos_hint: {'center_x': .55, 'center_y': .2}
-                on_active: root.controller.send_anode(11)
+                pos_hint: {'center_x': .54, 'center_y': .15}
+                on_active: root.controller.send_anode(11, *args)
             MDCheckbox:
                 id: a12
                 group: 'group'
                 size_hint: None, None
                 size: dp(48), dp(48)
-                pos_hint: {'center_x': .65, 'center_y': .2}
-                on_active: root.controller.send_anode(12)
+                pos_hint: {'center_x': .68, 'center_y': .15}
+                on_active: root.controller.send_anode(12, *args)
+        MDRelativeLayout:
+            size_hint: None, None
+            size: 550, 150
+            pos: 200, 200
         MDBoxLayout:
             orientation: 'horizontal'
             adaptive_height: True

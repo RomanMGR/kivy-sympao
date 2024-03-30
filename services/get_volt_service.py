@@ -12,3 +12,4 @@ class GetVoltService(GetVoltServiceBase):
     async def get_volt(self, ble_client):
         GetVoltService.battery_voltage = (
                 str(obr(await ble_client.read_gatt_char("964bfa71-51ae-49ff-98a8-b2f17c129716"))))
+        print(GetVoltService.battery_voltage)
